@@ -1,0 +1,12 @@
+steps:
+  - name: "gcr.io/cloud-builders/docker"
+    args: ["build", "-t", "gcr.io/k8s-ci-cd-project/cloud-container2", "."]
+  - name: "gcr.io/cloud-builders/docker"
+    args: ["push", "gcr.io/k8s-ci-cd-project/cloud-container2"]
+  - name: "gcr.io/cloud-builders/gke-deploy"
+    args:
+      - run
+      - --filename=cloud-container2-deployment.yaml
+      - --image=gcr.io/k8s-ci-cd-project/cloud-container2
+      - --location=us-central1
+      - --cluster=k8s-cluster

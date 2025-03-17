@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cloud-container2
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cloud-container2
+  template:
+    metadata:
+      labels:
+        app: cloud-container2
+    spec:
+      containers:
+        - name: cloud-container2
+          image: gcr.io/k8s-ci-cd-project/cloud-container2:latest
+          ports:
+            - containerPort: 9090
+          volumeMounts:
+            - mountPath: /persistent_data_dir
+              name: shared-storage
+      volumes:
+        - name: shared-storage
+          persistentVolumeClaim:
+            claimName: cloud-pvc
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: cloud-container2-service
+spec:
+  type: ClusterIP
+  selector:
+    app: cloud-container2
+  ports:
+    - protocol: TCP
+      port: 9090
+      targetPort: 9090
