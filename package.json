@@ -1,0 +1,12 @@
+{
+  "name": "cloud-container2",
+  "version": "1.0.0",
+  "description": "Container 2 handles calculation for stored files",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}

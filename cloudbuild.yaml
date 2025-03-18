@@ -1,0 +1,25 @@
+steps:
+  - name: "gcr.io/cloud-builders/docker"
+    args:
+      [
+        "build",
+        "-t",
+        "us-central1-docker.pkg.dev/k8s-ci-cd-project/k8s-repo/cloud-container2",
+        ".",
+      ]
+  - name: "gcr.io/cloud-builders/docker"
+    args:
+      [
+        "push",
+        "us-central1-docker.pkg.dev/k8s-ci-cd-project/k8s-repo/cloud-container2",
+      ]
+  - name: "gcr.io/cloud-builders/gke-deploy"
+    args:
+      - run
+      - --filename=cloud-container2-deployment.yaml
+      - --image=us-central1-docker.pkg.dev/k8s-ci-cd-project/k8s-repo/cloud-container2
+      - --location=us-central1
+      - --cluster=k8s-cluster
+
+options:
+  logging: CLOUD_LOGGING_ONLY
