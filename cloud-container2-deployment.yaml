@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: cloud-container2
-          image: gcr.io/k8s-ci-cd-project/cloud-container2:latest
+          image: us-central1-docker.pkg.dev/k8s-ci-cd-project/k8s-repo/cloud-container2:latest
           ports:
             - containerPort: 9090
           volumeMounts:
