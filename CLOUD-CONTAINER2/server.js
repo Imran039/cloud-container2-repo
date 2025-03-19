@@ -15,7 +15,7 @@ app.post("/calculate", (req, res) => {
     return res.status(400).json({ file: null, error: "Invalid JSON input." });
   }
 
-  const filePath = path.join(STORAGE_DIR, file);
+  const filePath = `${STORAGE_DIR}${file}`;
 
   if (!fs.existsSync(filePath)) {
     return res.status(404).json({ file, error: "File not found." });
@@ -26,7 +26,7 @@ app.post("/calculate", (req, res) => {
     const lines = data.trim().split("\n");
 
     if (lines.length < 2) {
-      return res.status(400).json({ file, error: "Invalid CSV format: No data rows." });
+      return res.status(400).json({ file, error: "Input file not in CSV format." }); // Fix: Matching expected error message
     }
 
     let sum = 0;
@@ -38,7 +38,7 @@ app.post("/calculate", (req, res) => {
 
       const parts = line.split(",");
       if (parts.length !== 2 || isNaN(parts[1])) {
-        return res.status(400).json({ file, error: "Invalid CSV format: Incorrect column structure." });
+        return res.status(400).json({ file, error: "Input file not in CSV format." }); // Fix: Consistent error message
       }
 
       const [prod, amount] = parts;
