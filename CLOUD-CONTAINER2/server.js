@@ -23,22 +23,32 @@ app.post("/calculate", (req, res) => {
 
   try {
     const data = fs.readFileSync(filePath, "utf8");
-    const lines = data.trim().split("\n").slice(1); // Skip header line
+    const lines = data.trim().split("\n");
+
+    if (lines.length < 2) {
+      return res.status(400).json({ file, error: "Invalid CSV format: No data rows." });
+    }
+
     let sum = 0;
 
-    for (const line of lines) {
-      const [prod, amount] = line.split(",");
-      if (!prod || isNaN(amount)) {
-        return res
-          .status(400)
-          .json({ file, error: "Input file not in CSV format." });
+    for (let i = 1; i < lines.length; i++) {
+      const line = lines[i].trim();
+      
+      if (!line) continue; // Skip empty lines
+
+      const parts = line.split(",");
+      if (parts.length !== 2 || isNaN(parts[1])) {
+        return res.status(400).json({ file, error: "Invalid CSV format: Incorrect column structure." });
       }
+
+      const [prod, amount] = parts;
       if (prod.trim() === product) {
         sum += parseInt(amount.trim(), 10);
       }
     }
 
     return res.json({ file, sum });
+
   } catch (error) {
     return res.status(500).json({ file, error: "Error reading the file." });
   }
